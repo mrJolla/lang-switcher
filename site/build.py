@@ -11,6 +11,14 @@ DOCS = ROOT / "docs"
 BASE = "https://mrjolla.github.io/lang-switcher/"
 REPO = "https://github.com/mrJolla/lang-switcher"
 DMG = REPO + "/releases/latest/download/LangSwitcher.dmg"
+# Search-engine site-ownership tokens, emitted as <meta> tags in <head> of every HTML page.
+VERIFICATION = {
+    "google": "loobErqDKAxAaOqkhYnc5LhmfyWnEYP-pUB9zxiNMs4",
+    "yandex": "830abf24e53da479",
+}
+def verification_tags():
+    return (f'<meta name="google-site-verification" content="{VERIFICATION["google"]}" />\n'
+            f'<meta name="yandex-verification" content="{VERIFICATION["yandex"]}" />')
 def bcp(l): return T[l].get("bcp", l)   # hreflang / html lang / JSON-LD (pt -> pt-BR); URL path stays /pt/
 
 # The app's own menu labels come from the .strings files, so the site mockups can't drift from the app.
@@ -151,6 +159,7 @@ def page(lang):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{e(t["title"])}</title>
 <meta name="description" content="{d}">
+{verification_tags()}
 <meta name="color-scheme" content="light dark">
 <link rel="canonical" href="{BASE}{lang}/">
 {alts}
@@ -203,6 +212,7 @@ def root():
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{e(T["en"]["title"])}</title>
 <meta name="description" content="{e(T["en"]["description"], True)}">
+{verification_tags()}
 <meta name="color-scheme" content="light dark">
 <link rel="canonical" href="{BASE}">
 {alts}
@@ -271,6 +281,8 @@ def notfound():
 """
 
 def robots():
+    # Search engines only read robots.txt at the host root (mrjolla.github.io/robots.txt), so this
+    # project-path copy is informational only. Kept for completeness; it does not affect indexing here.
     return f"User-agent: *\nAllow: /\n\nSitemap: {BASE}sitemap.xml\n"
 
 def sitemap():
