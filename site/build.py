@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Generate docs/<lang>/index.html, docs/index.html and docs/404.html.
-Usage: python3 site/build.py   (no dependencies)"""
-import pathlib
+"""Generate docs/<lang>/index.html, docs/index.html, docs/404.html, docs/robots.txt, docs/sitemap.xml.
+Usage: python3 site/build.py   (no dependencies)
+Social images docs/assets/og/og-<lang>.png are made separately by: python3 site/og.py (needs Chrome)."""
+import datetime, json, pathlib
 from html import escape as e
-from translations import T, S, ORDER, VERSION
+from translations import T, S, ORDER, VERSION, OG_META
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
@@ -78,11 +79,51 @@ def steps(lang):
         items.append(f'<li class="step"><div class="txt"><span class="num" aria-hidden="true">{i}</span><div><h3>{ti}</h3><p>{e(tx)}</p></div></div><div class="art">{mock(i, u)}</div></li>')
     return f'<section class="install container" aria-labelledby="install-h"><h2 id="install-h">{e(s["h"])}</h2><ol class="steps">' + "".join(items) + '</ol></section>'
 
+TODAY = datetime.date.today().isoformat()
+
+def og_url(l): return f"{BASE}assets/og/og-{l}.png"
+
+def og_alt(l): return f'LangSwitcher — {T[l]["h1"]}'
+
+def social(l, url, locale, alt_locales):
+    """OG + Twitter + theme-color + JSON-LD for page in language l (root uses en)."""
+    t = T[l]
+    d, n, a = e(t["description"], True), e(t["title"], True), e(og_alt(l), True)
+    ld = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "LangSwitcher",
+          "description": t["description"], "operatingSystem": "macOS 13+",
+          "applicationCategory": "UtilitiesApplication", "softwareVersion": VERSION,
+          "offers": {"@type": "Offer", "price": 0, "priceCurrency": "USD"},
+          "downloadUrl": DMG, "image": og_url(l), "url": url, "inLanguage": l,
+          "author": {"@type": "Person", "name": "mrJolla", "url": "https://github.com/mrJolla"}}
+    ldj = json.dumps(ld, ensure_ascii=False, indent=2).replace("</", "<\\/")
+    alts = "\n".join(f'<meta property="og:locale:alternate" content="{T[x]["locale"]}">' for x in alt_locales)
+    return f"""<meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LangSwitcher">
+<meta property="og:title" content="{n}">
+<meta property="og:description" content="{d}">
+<meta property="og:url" content="{url}">
+<meta property="og:image" content="{og_url(l)}">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{a}">
+<meta property="og:locale" content="{locale}">
+{alts}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{n}">
+<meta name="twitter:description" content="{d}">
+<meta name="twitter:image" content="{og_url(l)}">
+<meta name="twitter:image:alt" content="{a}">
+<script type="application/ld+json">
+{ldj}
+</script>"""
+
 def page(lang):
     t = T[lang]
     alts = "\n".join(f'<link rel="alternate" hreflang="{l}" href="{BASE}{l}/">' for l in ORDER)
     alts += f'\n<link rel="alternate" hreflang="x-default" href="{BASE}">'
-    og_alts = "\n".join(f'<meta property="og:locale:alternate" content="{T[l]["locale"]}">' for l in ORDER if l != lang)
     opts = "\n".join(
         f'<li role="none"><a role="menuitem" href="../{l}/" hreflang="{l}" lang="{l}" data-lang="{l}"'
         f'{" aria-current=\"true\"" if l == lang else ""}>{flag(l)}<span>{e(T[l]["native"])}</span></a></li>'
@@ -99,15 +140,7 @@ def page(lang):
 <meta name="color-scheme" content="light dark">
 <link rel="canonical" href="{BASE}{lang}/">
 {alts}
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="LangSwitcher">
-<meta property="og:title" content="{n}">
-<meta property="og:description" content="{d}">
-<meta property="og:url" content="{BASE}{lang}/">
-<meta property="og:image" content="{BASE}assets/icon-512.png">
-<meta property="og:locale" content="{t["locale"]}">
-{og_alts}
-<meta name="twitter:card" content="summary">
+{social(lang, BASE + lang + "/", t["locale"], [l for l in ORDER if l != lang])}
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="stylesheet" href="../assets/style.css">
@@ -154,12 +187,13 @@ def root():
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LangSwitcher</title>
+<title>{e(T["en"]["title"])}</title>
 <meta name="description" content="{e(T["en"]["description"], True)}">
 <meta name="color-scheme" content="light dark">
 <link rel="canonical" href="{BASE}">
 {alts}
 <link rel="alternate" hreflang="x-default" href="{BASE}">
+{social("en", BASE, T["en"]["locale"], [l for l in ORDER if l != "en"])}
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="stylesheet" href="assets/style.css">
@@ -206,7 +240,7 @@ def notfound():
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>404 — LangSwitcher</title>
+<title>404 — Page not found · LangSwitcher</title>
 <meta name="robots" content="noindex">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" type="image/png" href="/lang-switcher/assets/favicon-32.png">
@@ -222,6 +256,18 @@ def notfound():
 </html>
 """
 
+def robots():
+    return f"User-agent: *\nAllow: /\n\nSitemap: {BASE}sitemap.xml\n"
+
+def sitemap():
+    def entry(loc):
+        links = "".join(f'    <xhtml:link rel="alternate" hreflang="{l}" href="{BASE}{l}/"/>\n' for l in ORDER)
+        links += f'    <xhtml:link rel="alternate" hreflang="x-default" href="{BASE}"/>\n'
+        return f"  <url>\n    <loc>{loc}</loc>\n    <lastmod>{TODAY}</lastmod>\n{links}  </url>\n"
+    urls = entry(BASE) + "".join(entry(f"{BASE}{l}/") for l in ORDER)
+    return ('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n'
+            f'        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n{urls}</urlset>\n')
+
 def write(path, s):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(s, encoding="utf-8")
@@ -230,5 +276,7 @@ for l in ORDER:
     write(DOCS / l / "index.html", page(l))
 write(DOCS / "index.html", root())
 write(DOCS / "404.html", notfound())
+write(DOCS / "robots.txt", robots())
+write(DOCS / "sitemap.xml", sitemap())
 (DOCS / ".nojekyll").touch()
 print("built:", ", ".join(ORDER))

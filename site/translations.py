@@ -136,3 +136,15 @@ S = {
    ("Conceda a monitorização de entrada", "Escolha “{grant}” no menu do app, ou ative o LangSwitcher em “{settings}” → “{privacy}” → “{input_mon}”."),
    ("Pronto", "O indicador de layout (EN/RU) aparece na barra de menus. Toque em Cmd+Shift para trocar e, se quiser, ative “{login}” no menu.")]),
 }
+
+# ---- Social preview (og.py) -------------------------------------------------
+# og_meta: line printed on docs/assets/og/og-<lang>.png
+OG_META = {
+"ru": "macOS 13+ · Apple Silicon и Intel · Бесплатно",
+"en": "macOS 13+ · Apple Silicon & Intel · Free",
+"de": "macOS 13+ · Apple Silicon & Intel · Kostenlos",
+"es": "macOS 13+ · Apple Silicon e Intel · Gratis",
+"it": "macOS 13+ · Apple Silicon e Intel · Gratis",
+"fr": "macOS 13+ · Apple Silicon et Intel · Gratuit",
+"pt": "macOS 13+ · Apple Silicon e Intel · Grátis",
+}
