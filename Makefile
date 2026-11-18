@@ -43,8 +43,9 @@ dmg: release
 	ln -s /Applications build/dmg/Applications
 	hdiutil create -volname "LangSwitcher" -srcfolder build/dmg -fs HFS+ -format UDZO -ov $(DMG)
 	hdiutil verify $(DMG)
+	cp $(DMG) dist/LangSwitcher.dmg
 	rm -rf build/dmg
-	@echo "Собрано: $(DMG)"
+	@echo "Собрано: $(DMG) (+ dist/LangSwitcher.dmg)"
 
 test: build
 	$(BIN) --self-test

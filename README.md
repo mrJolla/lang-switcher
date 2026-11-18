@@ -65,3 +65,9 @@ make clean
 
 - Системный `TISCreateInputSourceList(…, includeAllInstalled: false)` не возвращает включённые режимы CJK (Korean), поэтому список строится из полного перечня с фильтром по IsEnabled и порядком из настроек `com.apple.HIToolbox`.
 - Из-за известной особенности macOS выбор CJK-метода иногда не применяется; после переключения приложение проверяет результат и повторяет выбор через 0.08 и 0.25 с.
+
+## Сайт
+
+Лендинг: https://mrjolla.github.io/lang-switcher/ (GitHub Pages, ветка `main`, папка `/docs`). Ссылка «Download» ведёт на `releases/latest/download/LangSwitcher.dmg`, поэтому в релиз нужно прикладывать `dist/LangSwitcher.dmg` (его создаёт `make dmg` рядом с версионным файлом).
+
+Страницы на 7 языках генерируются из одного шаблона и переводов: правьте `site/translations.py` / `site/build.py`, затем `python3 site/build.py` (пересобирает `docs/<язык>/index.html`, `docs/index.html`, `docs/404.html`) и коммитьте результат.

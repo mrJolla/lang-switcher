@@ -7,3 +7,4 @@ dist/
 *.iconset/
 *.xcuserstate
 xcuserdata/
+__pycache__/

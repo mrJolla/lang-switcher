@@ -1,0 +1,183 @@
+#!/usr/bin/env python3
+"""Generate docs/<lang>/index.html, docs/index.html and docs/404.html.
+Usage: python3 site/build.py   (no dependencies)"""
+import pathlib
+from html import escape as e
+from translations import T, ORDER, VERSION
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+DOCS = ROOT / "docs"
+BASE = "https://mrjolla.github.io/lang-switcher/"
+REPO = "https://github.com/mrJolla/lang-switcher"
+DMG = REPO + "/releases/latest/download/LangSwitcher.dmg"
+FLAG = {"ru": "ru", "en": "gb", "de": "de", "es": "es", "it": "it", "fr": "fr", "pt": "pt"}
+
+SPRITE = """<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="f-ru" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect y="6.67" width="30" height="6.67" fill="#0039a6"/><rect y="13.33" width="30" height="6.67" fill="#d52b1e"/></symbol>
+<symbol id="f-de" viewBox="0 0 30 20"><rect width="30" height="20" fill="#dd0000"/><rect width="30" height="6.67" fill="#000"/><rect y="13.33" width="30" height="6.67" fill="#ffce00"/></symbol>
+<symbol id="f-es" viewBox="0 0 30 20"><rect width="30" height="20" fill="#aa151b"/><rect y="5" width="30" height="10" fill="#f1bf00"/></symbol>
+<symbol id="f-it" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#009246"/><rect x="20" width="10" height="20" fill="#ce2b37"/></symbol>
+<symbol id="f-fr" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#0055a4"/><rect x="20" width="10" height="20" fill="#ef4135"/></symbol>
+<symbol id="f-pt" viewBox="0 0 30 20"><rect width="30" height="20" fill="#f00"/><rect width="12" height="20" fill="#060"/><circle cx="12" cy="10" r="3.4" fill="#ffd400"/><circle cx="12" cy="10" r="1.9" fill="#f00"/></symbol>
+<symbol id="f-gb" viewBox="0 0 30 20"><rect width="30" height="20" fill="#012169"/><path d="M0 0L30 20M30 0L0 20" stroke="#fff" stroke-width="4"/><path d="M0 0L30 20M30 0L0 20" stroke="#c8102e" stroke-width="1.6"/><path d="M15 0V20M0 10H30" stroke="#fff" stroke-width="6"/><path d="M15 0V20M0 10H30" stroke="#c8102e" stroke-width="3.6"/></symbol>
+</defs></svg>"""
+
+def flag(code):
+    return f'<svg class="flag" viewBox="0 0 30 20" width="22" height="15" aria-hidden="true" focusable="false"><use href="#f-{FLAG[code]}"/></svg>'
+
+GH_MARK = '<svg class="gh-mark" viewBox="0 0 16 16" width="20" height="20" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>'
+
+def page(lang):
+    t = T[lang]
+    alts = "\n".join(f'<link rel="alternate" hreflang="{l}" href="{BASE}{l}/">' for l in ORDER)
+    alts += f'\n<link rel="alternate" hreflang="x-default" href="{BASE}">'
+    og_alts = "\n".join(f'<meta property="og:locale:alternate" content="{T[l]["locale"]}">' for l in ORDER if l != lang)
+    opts = "\n".join(
+        f'<li role="none"><a role="menuitem" href="../{l}/" hreflang="{l}" lang="{l}" data-lang="{l}"'
+        f'{" aria-current=\"true\"" if l == lang else ""}>{flag(l)}<span>{e(T[l]["native"])}</span></a></li>'
+        for l in ORDER)
+    meta = e(t["meta"].format(v=VERSION))
+    d, n = e(t["description"], True), e(t["title"], True)
+    return f"""<!doctype html>
+<html lang="{lang}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{e(t["title"])}</title>
+<meta name="description" content="{d}">
+<meta name="color-scheme" content="light dark">
+<link rel="canonical" href="{BASE}{lang}/">
+{alts}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LangSwitcher">
+<meta property="og:title" content="{n}">
+<meta property="og:description" content="{d}">
+<meta property="og:url" content="{BASE}{lang}/">
+<meta property="og:image" content="{BASE}assets/icon-512.png">
+<meta property="og:locale" content="{t["locale"]}">
+{og_alts}
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+{SPRITE}
+<header class="site-header">
+<div class="bar">
+<a class="brand" href="./" aria-label="{e(t["home"], True)}"><img src="../assets/icon-64.png" width="32" height="32" alt=""><span>LangSwitcher</span></a>
+<div class="actions">
+<a class="gh-link" href="{REPO}" aria-label="{e(t["gh_label"], True)}">{GH_MARK}<span class="gh-text">GitHub</span></a>
+<details class="lang" id="lang">
+<summary aria-label="{e(t["lang_label"], True)}">{flag(lang)}<span class="code">{lang}</span><svg class="chev" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+<ul role="menu" aria-label="{e(t["lang_label"], True)}">
+{opts}
+</ul>
+</details>
+</div>
+</div>
+</header>
+<main class="hero">
+<div class="icon-wrap"><img class="app-icon" src="../assets/icon-512.png" srcset="../assets/icon-256.png 256w, ../assets/icon-512.png 512w" sizes="(max-width: 480px) 168px, 216px" width="216" height="216" alt="{e(t["icon_alt"], True)}"></div>
+<h1>{e(t["h1"])}</h1>
+<p class="sub">{e(t["sub"])}</p>
+<div class="buttons">
+<a class="btn primary" href="{DMG}">{e(t["download"])}</a>
+<a class="btn secondary" href="{REPO}">{e(t["github"])}</a>
+</div>
+<p class="meta">{meta}</p>
+<p class="note">{e(t["note"])}</p>
+</main>
+<footer class="site-footer">© 2026 mrJolla · <a href="{REPO}">GitHub</a></footer>
+<script src="../assets/lang.js"></script>
+</body>
+</html>
+"""
+
+def root():
+    langs = ",".join(f'"{l}"' for l in ORDER)
+    links = "\n".join(f'<li><a href="{l}/" hreflang="{l}">{e(T[l]["native"])}</a></li>' for l in ORDER)
+    alts = "\n".join(f'<link rel="alternate" hreflang="{l}" href="{BASE}{l}/">' for l in ORDER)
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LangSwitcher</title>
+<meta name="description" content="{e(T["en"]["description"], True)}">
+<meta name="color-scheme" content="light dark">
+<link rel="canonical" href="{BASE}">
+{alts}
+<link rel="alternate" hreflang="x-default" href="{BASE}">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/style.css">
+<script>
+(function () {{
+  var langs = [{langs}], pick = "en";
+  try {{
+    var s = localStorage.getItem("lang");
+    if (s && langs.indexOf(s) > -1) pick = s;
+    else {{
+      var n = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "en"];
+      for (var i = 0; i < n.length; i++) {{
+        var c = String(n[i]).toLowerCase().split("-")[0];
+        if (langs.indexOf(c) > -1) {{ pick = c; break; }}
+      }}
+    }}
+  }} catch (err) {{
+    var n2 = navigator.languages || [navigator.language || "en"];
+    for (var j = 0; j < n2.length; j++) {{
+      var c2 = String(n2[j]).toLowerCase().split("-")[0];
+      if (langs.indexOf(c2) > -1) {{ pick = c2; break; }}
+    }}
+  }}
+  location.replace(pick + "/" + location.search + location.hash);
+}})();
+</script>
+</head>
+<body class="plain">
+<main class="hero">
+<img class="app-icon" src="assets/icon-256.png" width="128" height="128" alt="LangSwitcher">
+<h1>LangSwitcher</h1>
+<noscript><ul class="lang-list">
+{links}
+</ul></noscript>
+</main>
+</body>
+</html>
+"""
+
+def notfound():
+    # Absolute paths: a 404 can be served from any depth under /lang-switcher/.
+    return """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>404 — LangSwitcher</title>
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/png" href="/lang-switcher/assets/favicon-32.png">
+<link rel="stylesheet" href="/lang-switcher/assets/style.css">
+</head>
+<body class="plain">
+<main class="hero">
+<img class="app-icon" src="/lang-switcher/assets/icon-256.png" width="128" height="128" alt="LangSwitcher">
+<h1>404</h1>
+<p class="sub"><a href="/lang-switcher/">LangSwitcher</a></p>
+</main>
+</body>
+</html>
+"""
+
+def write(path, s):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(s, encoding="utf-8")
+
+for l in ORDER:
+    write(DOCS / l / "index.html", page(l))
+write(DOCS / "index.html", root())
+write(DOCS / "404.html", notfound())
+(DOCS / ".nojekyll").touch()
+print("built:", ", ".join(ORDER))
