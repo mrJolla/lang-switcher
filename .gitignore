@@ -1,0 +1,9 @@
+build/
+dist/
+.DS_Store
+.swiftpm/
+.build/
+*.dmg
+*.iconset/
+*.xcuserstate
+xcuserdata/
