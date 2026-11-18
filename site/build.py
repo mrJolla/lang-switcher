@@ -83,7 +83,7 @@ TODAY = datetime.date.today().isoformat()
 
 def og_url(l): return f"{BASE}assets/og/og-{l}.png"
 
-def og_alt(l): return f'LangSwitcher — {T[l]["h1"]}'
+def og_alt(l): return T[l]["og_alt"]
 
 def social(l, url, locale, alt_locales):
     """OG + Twitter + theme-color + JSON-LD for page in language l (root uses en)."""
@@ -172,7 +172,7 @@ def page(lang):
 <p class="meta">{meta}</p>
 </main>
 {steps(lang)}
-<footer class="site-footer container">© 2026 mrJolla · <a href="{REPO}">GitHub</a></footer>
+<footer class="site-footer container">© 2026 mrJolla · <a href="{REPO}">GitHub</a> · <a href="{REPO}/blob/main/LICENSE">{e(t["license"])}</a></footer>
 <script src="../assets/lang.js"></script>
 </body>
 </html>

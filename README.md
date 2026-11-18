@@ -11,6 +11,7 @@
 ![macOS 13+](https://img.shields.io/badge/macOS-13%2B-black?logo=apple)
 ![Apple Silicon & Intel](https://img.shields.io/badge/Apple%20Silicon%20%26%20Intel-universal-blue)
 [![Latest release](https://img.shields.io/github/v/release/mrJolla/lang-switcher)](https://github.com/mrJolla/lang-switcher/releases/latest)
+[![License](https://img.shields.io/github/license/mrJolla/lang-switcher)](LICENSE)
 
 [Website](https://mrjolla.github.io/lang-switcher/) ·
 [Download](https://github.com/mrJolla/lang-switcher/releases/latest/download/LangSwitcher.dmg) ·
@@ -101,6 +102,10 @@ and commit the result. The Download button points to `releases/latest/download/L
 ## Privacy
 
 LangSwitcher listens to keyboard modifier and key/mouse-click events locally through a listen-only event tap, only to detect the Cmd+Shift gesture. It does not record or store what you type, and it has no network code at all.
+
+## License
+
+MIT. See [LICENSE](LICENSE). You may use, copy, modify, merge, publish, distribute, sublicense and sell copies of the software, as long as the copyright notice is kept.
 
 ## Credits
 

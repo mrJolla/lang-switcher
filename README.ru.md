@@ -11,6 +11,7 @@
 ![macOS 13+](https://img.shields.io/badge/macOS-13%2B-black?logo=apple)
 ![Apple Silicon и Intel](https://img.shields.io/badge/Apple%20Silicon%20%26%20Intel-universal-blue)
 [![Последний релиз](https://img.shields.io/github/v/release/mrJolla/lang-switcher)](https://github.com/mrJolla/lang-switcher/releases/latest)
+[![Лицензия](https://img.shields.io/github/license/mrJolla/lang-switcher)](LICENSE)
 
 [Сайт](https://mrjolla.github.io/lang-switcher/) ·
 [Скачать](https://github.com/mrJolla/lang-switcher/releases/latest/download/LangSwitcher.dmg) ·
@@ -101,6 +102,10 @@ python3 site/build.py
 ## Конфиденциальность
 
 LangSwitcher локально получает события модификаторов, клавиш и кликов мыши через event tap только для чтения, исключительно чтобы распознать жест Cmd+Shift. Введённый текст не записывается и не сохраняется, сетевого кода в приложении нет.
+
+## Лицензия
+
+MIT. См. [LICENSE](LICENSE). Программу можно использовать, копировать, изменять, объединять, публиковать, распространять, сублицензировать и продавать его копии при сохранении уведомления об авторских правах.
 
 ## Автор
 
