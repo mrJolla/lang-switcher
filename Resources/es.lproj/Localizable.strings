@@ -1,0 +1,8 @@
+"menu.enabled" = "Activado";
+"menu.launchAtLogin" = "Abrir al iniciar sesión";
+"menu.layouts" = "Distribuciones";
+"menu.layoutUnavailable" = "%@ (no disponible)";
+"menu.permissionGranted" = "Permiso concedido";
+"menu.permissionNeeded" = "Se necesita el permiso «Monitorización de entrada»";
+"menu.grantPermission" = "Conceder permiso…";
+"menu.quit" = "Salir";

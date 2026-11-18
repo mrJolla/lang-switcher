@@ -1,0 +1,8 @@
+"menu.enabled" = "Activé";
+"menu.launchAtLogin" = "Ouvrir à la connexion";
+"menu.layouts" = "Dispositions";
+"menu.layoutUnavailable" = "%@ (indisponible)";
+"menu.permissionGranted" = "Autorisation accordée";
+"menu.permissionNeeded" = "Autorisation « Surveillance de l’entrée » requise";
+"menu.grantPermission" = "Accorder l’autorisation…";
+"menu.quit" = "Quitter";

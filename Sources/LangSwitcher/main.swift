@@ -15,6 +15,7 @@ if CommandLine.arguments.contains("--switch-next") {
     print("before=\(before) after=\(InputSources.current().map(InputSources.id) ?? "?")")
     exit(0)
 }
+if CommandLine.arguments.contains("--print-menu") { L10n.printMenu(); exit(0) }
 if CommandLine.arguments.contains("--self-test") { exit(runSelfTest()) }
 
 let enabledKey = "enabled"
@@ -153,11 +154,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     func menuNeedsUpdate(_ menu: NSMenu) {
         menu.removeAllItems()
-        let en = NSMenuItem(title: "Включено", action: #selector(toggleEnabled), keyEquivalent: "")
+        let en = NSMenuItem(title: L10n.enabled, action: #selector(toggleEnabled), keyEquivalent: "")
         en.target = self; en.state = isEnabled ? .on : .off
         menu.addItem(en)
 
-        let login = NSMenuItem(title: "Запускать при входе в систему", action: #selector(toggleLogin), keyEquivalent: "")
+        let login = NSMenuItem(title: L10n.launchAtLogin, action: #selector(toggleLogin), keyEquivalent: "")
         login.target = self; login.state = SMAppService.mainApp.status == .enabled ? .on : .off
         menu.addItem(login)
         menu.addItem(.separator())
@@ -166,29 +167,29 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         for s in InputSources.enabledList() {
             let sid = InputSources.id(s)
             let bad = InputSources.isUnselectable(s)
-            let it = NSMenuItem(title: InputSources.localizedName(s) + (bad ? " (недоступна)" : ""),
+            let it = NSMenuItem(title: bad ? L10n.layoutUnavailable(InputSources.localizedName(s)) : InputSources.localizedName(s),
                                 action: #selector(toggleLayout(_:)), keyEquivalent: "")
             it.target = self; it.representedObject = sid
             it.state = (!bad && InputSources.isUserEnabled(s)) ? .on : .off
             it.isEnabled = !bad
             layouts.addItem(it)
         }
-        let layoutsItem = NSMenuItem(title: "Раскладки", action: nil, keyEquivalent: "")
+        let layoutsItem = NSMenuItem(title: L10n.layouts, action: nil, keyEquivalent: "")
         layoutsItem.submenu = layouts
         menu.addItem(layoutsItem)
 
         let granted = tapTrusted || CGPreflightListenEventAccess()
-        let status = NSMenuItem(title: granted ? "Разрешение выдано" : "Нужно разрешение «Мониторинг ввода»",
+        let status = NSMenuItem(title: granted ? L10n.permissionGranted : L10n.permissionNeeded,
                                 action: nil, keyEquivalent: "")
         status.isEnabled = false
         menu.addItem(status)
         if !granted {
-            let grant = NSMenuItem(title: "Выдать разрешение…", action: #selector(openPrivacy), keyEquivalent: "")
+            let grant = NSMenuItem(title: L10n.grantPermission, action: #selector(openPrivacy), keyEquivalent: "")
             grant.target = self
             menu.addItem(grant)
         }
         menu.addItem(.separator())
-        let quit = NSMenuItem(title: "Выход", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        let quit = NSMenuItem(title: L10n.quit, action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         menu.addItem(quit)
     }
 

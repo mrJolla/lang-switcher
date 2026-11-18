@@ -2,7 +2,7 @@
 """Generate docs/<lang>/index.html, docs/index.html, docs/404.html, docs/robots.txt, docs/sitemap.xml.
 Usage: python3 site/build.py   (no dependencies)
 Social images docs/assets/og/og-<lang>.png are made separately by: python3 site/og.py (needs Chrome)."""
-import datetime, json, pathlib
+import datetime, json, pathlib, re
 from html import escape as e
 from translations import T, S, ORDER, VERSION, OG_META
 
@@ -11,6 +11,20 @@ DOCS = ROOT / "docs"
 BASE = "https://mrjolla.github.io/lang-switcher/"
 REPO = "https://github.com/mrJolla/lang-switcher"
 DMG = REPO + "/releases/latest/download/LangSwitcher.dmg"
+def bcp(l): return T[l].get("bcp", l)   # hreflang / html lang / JSON-LD (pt -> pt-BR); URL path stays /pt/
+
+# The app's own menu labels come from the .strings files, so the site mockups can't drift from the app.
+STR_KEYS = {"grant": "menu.grantPermission", "enabled": "menu.enabled", "layouts": "menu.layouts",
+            "login": "menu.launchAtLogin", "quit": "menu.quit"}
+def app_strings(l):
+    path = ROOT / "Resources" / f'{T[l].get("lproj", l)}.lproj' / "Localizable.strings"
+    d = {}
+    for k, v in re.findall(r'^"((?:[^"\\]|\\.)*)"\s*=\s*"((?:[^"\\]|\\.)*)"\s*;', path.read_text(encoding="utf-8"), re.M):
+        d[k] = v.replace('\\"', '"').replace("\\n", "\n").replace("\\\\", "\\")
+    return {name: d[key] for name, key in STR_KEYS.items()}
+
+for _l in ORDER: S[_l]["ui"].update(app_strings(_l))
+
 FLAG = {"ru": "ru", "en": "gb", "de": "de", "es": "es", "it": "it", "fr": "fr", "pt": "pt"}
 
 SPRITE = """<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
@@ -19,7 +33,7 @@ SPRITE = """<svg width="0" height="0" style="position:absolute" aria-hidden="tru
 <symbol id="f-es" viewBox="0 0 30 20"><rect width="30" height="20" fill="#aa151b"/><rect y="5" width="30" height="10" fill="#f1bf00"/></symbol>
 <symbol id="f-it" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#009246"/><rect x="20" width="10" height="20" fill="#ce2b37"/></symbol>
 <symbol id="f-fr" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#0055a4"/><rect x="20" width="10" height="20" fill="#ef4135"/></symbol>
-<symbol id="f-pt" viewBox="0 0 30 20"><rect width="30" height="20" fill="#f00"/><rect width="12" height="20" fill="#060"/><circle cx="12" cy="10" r="3.4" fill="#ffd400"/><circle cx="12" cy="10" r="1.9" fill="#f00"/></symbol>
+<symbol id="f-pt" viewBox="0 0 30 20"><rect width="30" height="20" fill="#009c3b"/><path d="M15 1.8 28 10 15 18.2 2 10z" fill="#ffdf00"/><circle cx="15" cy="10" r="4.6" fill="#002776"/></symbol>
 <symbol id="f-gb" viewBox="0 0 30 20"><rect width="30" height="20" fill="#012169"/><path d="M0 0L30 20M30 0L0 20" stroke="#fff" stroke-width="4"/><path d="M0 0L30 20M30 0L0 20" stroke="#c8102e" stroke-width="1.6"/><path d="M15 0V20M0 10H30" stroke="#fff" stroke-width="6"/><path d="M15 0V20M0 10H30" stroke="#c8102e" stroke-width="3.6"/></symbol>
 </defs></svg>"""
 
@@ -93,7 +107,7 @@ def social(l, url, locale, alt_locales):
           "description": t["description"], "operatingSystem": "macOS 13+",
           "applicationCategory": "UtilitiesApplication", "softwareVersion": VERSION,
           "offers": {"@type": "Offer", "price": 0, "priceCurrency": "USD"},
-          "downloadUrl": DMG, "image": og_url(l), "url": url, "inLanguage": l,
+          "downloadUrl": DMG, "image": og_url(l), "url": url, "inLanguage": bcp(l),
           "author": {"@type": "Person", "name": "mrJolla", "url": "https://github.com/mrJolla"}}
     ldj = json.dumps(ld, ensure_ascii=False, indent=2).replace("</", "<\\/")
     alts = "\n".join(f'<meta property="og:locale:alternate" content="{T[x]["locale"]}">' for x in alt_locales)
@@ -122,16 +136,16 @@ def social(l, url, locale, alt_locales):
 
 def page(lang):
     t = T[lang]
-    alts = "\n".join(f'<link rel="alternate" hreflang="{l}" href="{BASE}{l}/">' for l in ORDER)
+    alts = "\n".join(f'<link rel="alternate" hreflang="{bcp(l)}" href="{BASE}{l}/">' for l in ORDER)
     alts += f'\n<link rel="alternate" hreflang="x-default" href="{BASE}">'
     opts = "\n".join(
-        f'<li role="none"><a role="menuitem" href="../{l}/" hreflang="{l}" lang="{l}" data-lang="{l}"'
+        f'<li role="none"><a role="menuitem" href="../{l}/" hreflang="{bcp(l)}" lang="{bcp(l)}" data-lang="{l}"'
         f'{" aria-current=\"true\"" if l == lang else ""}>{flag(l)}<span>{e(T[l]["native"])}</span></a></li>'
         for l in ORDER)
     meta = e(t["meta"].format(v=VERSION))
     d, n = e(t["description"], True), e(t["title"], True)
     return f"""<!doctype html>
-<html lang="{lang}">
+<html lang="{bcp(lang)}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -180,8 +194,8 @@ def page(lang):
 
 def root():
     langs = ",".join(f'"{l}"' for l in ORDER)
-    links = "\n".join(f'<li><a href="{l}/" hreflang="{l}">{e(T[l]["native"])}</a></li>' for l in ORDER)
-    alts = "\n".join(f'<link rel="alternate" hreflang="{l}" href="{BASE}{l}/">' for l in ORDER)
+    links = "\n".join(f'<li><a href="{l}/" hreflang="{bcp(l)}">{e(T[l]["native"])}</a></li>' for l in ORDER)
+    alts = "\n".join(f'<link rel="alternate" hreflang="{bcp(l)}" href="{BASE}{l}/">' for l in ORDER)
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -261,7 +275,7 @@ def robots():
 
 def sitemap():
     def entry(loc):
-        links = "".join(f'    <xhtml:link rel="alternate" hreflang="{l}" href="{BASE}{l}/"/>\n' for l in ORDER)
+        links = "".join(f'    <xhtml:link rel="alternate" hreflang="{bcp(l)}" href="{BASE}{l}/"/>\n' for l in ORDER)
         links += f'    <xhtml:link rel="alternate" hreflang="x-default" href="{BASE}"/>\n'
         return f"  <url>\n    <loc>{loc}</loc>\n    <lastmod>{TODAY}</lastmod>\n{links}  </url>\n"
     urls = entry(BASE) + "".join(entry(f"{BASE}{l}/") for l in ORDER)

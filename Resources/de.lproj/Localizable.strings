@@ -1,0 +1,8 @@
+"menu.enabled" = "Aktiviert";
+"menu.launchAtLogin" = "Beim Anmelden starten";
+"menu.layouts" = "Layouts";
+"menu.layoutUnavailable" = "%@ (nicht verfügbar)";
+"menu.permissionGranted" = "Berechtigung erteilt";
+"menu.permissionNeeded" = "Berechtigung „Eingabeüberwachung“ erforderlich";
+"menu.grantPermission" = "Berechtigung erteilen…";
+"menu.quit" = "Beenden";

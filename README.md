@@ -21,7 +21,7 @@
 
 LangSwitcher is a small native menu-bar app for macOS that does one thing: it switches the input source when you tap **Cmd+Shift**, like Punto Switcher does. No Xcode project, no dependencies, universal binary (arm64 + x86_64).
 
-> The menu is in Russian for now; localization is not done yet. The [website](https://mrjolla.github.io/lang-switcher/) is available in 7 languages.
+> The menu follows the system language (7 languages: English, Russian, German, Spanish, Italian, French, Brazilian Portuguese). The [website](https://mrjolla.github.io/lang-switcher/) is available in the same 7 languages.
 
 ## Features
 
@@ -40,20 +40,20 @@ LangSwitcher is a small native menu-bar app for macOS that does one thing: it sw
    ```sh
    xattr -dr com.apple.quarantine /Applications/LangSwitcher.app
    ```
-4. **Input Monitoring.** Open the menu bar item > "Выдать разрешение…" (Grant permission), or System Settings > Privacy & Security > Input Monitoring, and enable LangSwitcher. No restart needed: the app checks every 2 seconds.
+4. **Input Monitoring.** Open the menu bar item > "Grant Permission…", or System Settings > Privacy & Security > Input Monitoring, and enable LangSwitcher. No restart needed: the app checks every 2 seconds.
 5. **Done.** Tap Cmd+Shift.
 
 ## Usage
 
-Tap **Cmd+Shift** anywhere. The menu bar item shows the current layout; click it for the menu (labels are in Russian):
+Tap **Cmd+Shift** anywhere. The menu bar item shows the current layout; click it for the menu (shown here in English; it follows the system language):
 
 | Menu item | Meaning |
 | --- | --- |
-| Включено | Enable or disable switching |
-| Запускать при входе в систему | Launch at login |
-| Раскладки | Submenu: choose which layouts take part in the cycle |
-| Разрешение выдано / Выдать разрешение… | Input Monitoring status and a shortcut to the settings |
-| Выход | Quit |
+| Enabled | Enable or disable switching |
+| Launch at Login | Launch at login |
+| Layouts | Submenu: choose which layouts take part in the cycle |
+| Permission granted / Grant Permission… | Input Monitoring status and a shortcut to the settings |
+| Quit | Quit |
 
 To list detected input sources: `/Applications/LangSwitcher.app/Contents/MacOS/LangSwitcher --list-sources`.
 

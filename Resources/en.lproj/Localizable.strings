@@ -1,0 +1,8 @@
+"menu.enabled" = "Enabled";
+"menu.launchAtLogin" = "Launch at Login";
+"menu.layouts" = "Layouts";
+"menu.layoutUnavailable" = "%@ (unavailable)";
+"menu.permissionGranted" = "Permission granted";
+"menu.permissionNeeded" = "Input Monitoring permission needed";
+"menu.grantPermission" = "Grant Permission…";
+"menu.quit" = "Quit";

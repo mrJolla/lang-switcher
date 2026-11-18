@@ -1,5 +1,5 @@
 # One entry per language. Edit here, then run: python3 site/build.py
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 ORDER = ["ru", "en", "de", "es", "it", "fr", "pt"]
 
 T = {
@@ -63,26 +63,26 @@ T = {
   icon_alt="Icône de LangSwitcher : une touche bleue vitrée portant « A/Я »",
   og_alt="LangSwitcher : changez de disposition de clavier avec Cmd+Shift", license="Licence MIT",
   lang_label="Langue du site", home="LangSwitcher, accueil", gh_label="LangSwitcher sur GitHub"),
-"pt": dict(native="Português", locale="pt_PT",
+"pt": dict(native="Português (Brasil)", locale="pt_BR", bcp="pt-BR", lproj="pt-BR",
   title="LangSwitcher — troque o layout do teclado com Cmd+Shift no Mac",
-  description="App gratuito e nativo para a barra de menus do macOS que troca o layout do teclado com Cmd+Shift, como o Punto Switcher no Windows. Apple Silicon e Intel, sem Rosetta.",
+  description="Aplicativo gratuito e nativo para a barra de menus do macOS que troca o layout do teclado ao tocar Cmd+Shift, como o Punto Switcher no Windows. Apple Silicon e Intel, sem Rosetta.",
   h1="Troque de layout com Cmd+Shift",
   sub="Toque em Cmd+Shift e o layout do teclado muda, como no Punto Switcher do Windows. Atalhos como Cmd+Shift+Z não são afetados.",
   download="Baixar para macOS", github="Ver no GitHub",
   meta="Grátis · macOS 13+ · Apple Silicon e Intel · v{v}",
-  icon_alt="Ícone do LangSwitcher: uma tecla azul de aspeto vítreo com “A/Я”",
+  icon_alt="Ícone do LangSwitcher: uma tecla azul com aspecto de vidro mostrando “A/Я”",
   og_alt="LangSwitcher: troque o layout do teclado com Cmd+Shift", license="Licença MIT",
-  lang_label="Idioma do site", home="LangSwitcher, início", gh_label="LangSwitcher no GitHub"),
+  lang_label="Idioma do site", home="LangSwitcher, página inicial", gh_label="LangSwitcher no GitHub"),
 }
 
 # ---- Install steps section -------------------------------------------------
-# ui: strings used inside the mockups (macOS names as shown in each language).
+# ui: macOS system names used in the mockups. The app's own menu labels (grant, enabled, layouts,
+# login, quit) are NOT here: build.py reads them from Resources/<lang>.lproj/Localizable.strings.
 # steps: five (title, text) pairs; {name} placeholders are filled from ui in build.py.
 S = {
 "ru": dict(h="Как установить",
   ui=dict(downloads="Загрузки", applications="Программы", settings="Системные настройки", privacy="Конфиденциальность и безопасность",
-    input_mon="Мониторинг ввода", blocked="Приложение «LangSwitcher» заблокировано для защиты Mac.", open_anyway="Всё равно открыть",
-    grant="Выдать разрешение…", enabled="Включено", layouts="Раскладки", login="Запускать при входе в систему", quit="Выход"),
+    input_mon="Мониторинг ввода", blocked="Приложение «LangSwitcher» заблокировано для защиты Mac.", open_anyway="Всё равно открыть"),
   steps=[("Скачайте LangSwitcher.dmg", "Нажмите «Скачать для macOS» — файл LangSwitcher.dmg сохранится в папку «{downloads}»."),
    ("Перетащите в «{applications}»", "Откройте DMG и перетащите LangSwitcher на папку «{applications}»."),
    ("Первый запуск", "macOS предупредит, что разработчик неизвестен: приложение пока не нотаризовано. Откройте «{settings}» → «{privacy}» и нажмите «{open_anyway}»."),
@@ -90,8 +90,7 @@ S = {
    ("Готово", "В строке меню появится индикатор раскладки (EN/RU). Нажмите Cmd+Shift, чтобы переключить её; при желании включите в меню «{login}».")]),
 "en": dict(h="How to install",
   ui=dict(downloads="Downloads", applications="Applications", settings="System Settings", privacy="Privacy & Security",
-    input_mon="Input Monitoring", blocked="“LangSwitcher” was blocked to protect your Mac.", open_anyway="Open Anyway",
-    grant="Grant permission…", enabled="Enabled", layouts="Layouts", login="Launch at login", quit="Quit"),
+    input_mon="Input Monitoring", blocked="“LangSwitcher” was blocked to protect your Mac.", open_anyway="Open Anyway"),
   steps=[("Download LangSwitcher.dmg", "Click “Download for macOS”. LangSwitcher.dmg is saved to your {downloads} folder."),
    ("Drag it to {applications}", "Open the DMG and drag LangSwitcher onto the {applications} folder."),
    ("First launch", "macOS warns that the app is from an unidentified developer, because it isn’t notarized yet. Open {settings} → {privacy} and click “{open_anyway}”."),
@@ -99,8 +98,7 @@ S = {
    ("You’re set", "The layout indicator (EN/RU) appears in the menu bar. Tap Cmd+Shift to switch, and optionally turn on “{login}” in its menu.")]),
 "de": dict(h="So installierst du es",
   ui=dict(downloads="Downloads", applications="Programme", settings="Systemeinstellungen", privacy="Datenschutz & Sicherheit",
-    input_mon="Eingabeüberwachung", blocked="„LangSwitcher“ wurde zum Schutz deines Mac blockiert.", open_anyway="Dennoch öffnen",
-    grant="Berechtigung erteilen…", enabled="Aktiviert", layouts="Layouts", login="Beim Anmelden starten", quit="Beenden"),
+    input_mon="Eingabeüberwachung", blocked="„LangSwitcher“ wurde zum Schutz deines Mac blockiert.", open_anyway="Dennoch öffnen"),
   steps=[("LangSwitcher.dmg laden", "Klicke auf „Für macOS laden“. Die Datei LangSwitcher.dmg landet im Ordner „{downloads}“."),
    ("In „{applications}“ ziehen", "Öffne das DMG und ziehe LangSwitcher auf den Ordner „{applications}“."),
    ("Erster Start", "macOS warnt vor einem nicht identifizierten Entwickler, weil die App noch nicht notarisiert ist. Öffne „{settings}“ → „{privacy}“ und klicke auf „{open_anyway}“."),
@@ -108,8 +106,7 @@ S = {
    ("Fertig", "In der Menüleiste erscheint die Layout-Anzeige (EN/RU). Tippe Cmd+Shift zum Wechseln; auf Wunsch aktivierst du im Menü „{login}“.")]),
 "es": dict(h="Cómo instalarlo",
   ui=dict(downloads="Descargas", applications="Aplicaciones", settings="Ajustes del Sistema", privacy="Privacidad y seguridad",
-    input_mon="Monitorización de entrada", blocked="«LangSwitcher» se ha bloqueado para proteger tu Mac.", open_anyway="Abrir igualmente",
-    grant="Conceder permiso…", enabled="Activado", layouts="Distribuciones", login="Abrir al iniciar sesión", quit="Salir"),
+    input_mon="Monitorización de entrada", blocked="«LangSwitcher» se ha bloqueado para proteger tu Mac.", open_anyway="Abrir igualmente"),
   steps=[("Descarga LangSwitcher.dmg", "Pulsa «Descargar para macOS». LangSwitcher.dmg se guardará en la carpeta «{downloads}»."),
    ("Arrástralo a «{applications}»", "Abre el DMG y arrastra LangSwitcher a la carpeta «{applications}»."),
    ("Primer arranque", "macOS avisa de que la app es de un desarrollador no identificado, porque aún no está notarizada. Abre «{settings}» → «{privacy}» y pulsa «{open_anyway}»."),
@@ -117,8 +114,7 @@ S = {
    ("¡Listo!", "El indicador de distribución (EN/RU) aparece en la barra de menús. Pulsa Cmd+Shift para cambiar y, si quieres, activa «{login}» en su menú.")]),
 "it": dict(h="Come installarlo",
   ui=dict(downloads="Download", applications="Applicazioni", settings="Impostazioni di Sistema", privacy="Privacy e sicurezza",
-    input_mon="Monitoraggio input", blocked="“LangSwitcher” è stata bloccata per proteggere il Mac.", open_anyway="Apri comunque",
-    grant="Concedi autorizzazione…", enabled="Attivo", layouts="Layout", login="Apri al login", quit="Esci"),
+    input_mon="Monitoraggio input", blocked="“LangSwitcher” è stata bloccata per proteggere il Mac.", open_anyway="Apri comunque"),
   steps=[("Scarica LangSwitcher.dmg", "Fai clic su «Scarica per macOS». Il file LangSwitcher.dmg viene salvato nella cartella «{downloads}»."),
    ("Trascinalo in «{applications}»", "Apri il DMG e trascina LangSwitcher nella cartella «{applications}»."),
    ("Primo avvio", "macOS avvisa che lo sviluppatore non è identificato, perché l’app non è ancora notarizzata. Apri «{settings}» → «{privacy}» e fai clic su «{open_anyway}»."),
@@ -126,22 +122,20 @@ S = {
    ("Fatto", "Nella barra dei menu compare l’indicatore del layout (EN/RU). Premi Cmd+Shift per cambiare e, se vuoi, attiva «{login}» dal suo menu.")]),
 "fr": dict(h="Comment l’installer",
   ui=dict(downloads="Téléchargements", applications="Applications", settings="Réglages Système", privacy="Confidentialité et sécurité",
-    input_mon="Surveillance de l’entrée", blocked="« LangSwitcher » a été bloqué pour protéger votre Mac.", open_anyway="Ouvrir quand même",
-    grant="Accorder l’autorisation…", enabled="Activé", layouts="Dispositions", login="Ouvrir à la connexion", quit="Quitter"),
+    input_mon="Surveillance de l’entrée", blocked="« LangSwitcher » a été bloqué pour protéger votre Mac.", open_anyway="Ouvrir quand même"),
   steps=[("Téléchargez LangSwitcher.dmg", "Cliquez sur « Télécharger pour macOS ». Le fichier LangSwitcher.dmg est enregistré dans « {downloads} »."),
    ("Glissez-le dans « {applications} »", "Ouvrez le DMG et glissez LangSwitcher dans le dossier « {applications} »."),
    ("Premier lancement", "macOS signale un développeur non identifié, car l’app n’est pas encore notarisée. Ouvrez « {settings} » → « {privacy} » et cliquez sur « {open_anyway} »."),
    ("Autorisez la surveillance de l’entrée", "Choisissez « {grant} » dans le menu de l’app, ou activez LangSwitcher dans « {settings} » → « {privacy} » → « {input_mon} »."),
    ("C’est prêt", "L’indicateur de disposition (EN/RU) apparaît dans la barre des menus. Appuyez sur Cmd+Shift pour changer et, si vous le souhaitez, activez « {login} » dans son menu.")]),
 "pt": dict(h="Como instalar",
-  ui=dict(downloads="Transferências", applications="Aplicações", settings="Definições do Sistema", privacy="Privacidade e Segurança",
-    input_mon="Monitorização de Entrada", blocked="“LangSwitcher” foi bloqueada para proteger o Mac.", open_anyway="Abrir Mesmo Assim",
-    grant="Conceder permissão…", enabled="Ativado", layouts="Layouts", login="Abrir ao iniciar sessão", quit="Sair"),
-  steps=[("Baixe o LangSwitcher.dmg", "Clique em “Baixar para macOS”. O ficheiro LangSwitcher.dmg é guardado na pasta “{downloads}”."),
+  ui=dict(downloads="Downloads", applications="Aplicativos", settings="Ajustes do Sistema", privacy="Privacidade e Segurança",
+    input_mon="Monitoramento de Entrada", blocked="“LangSwitcher” foi bloqueado para proteger o Mac.", open_anyway="Abrir Mesmo Assim"),
+  steps=[("Baixe o LangSwitcher.dmg", "Clique em “Baixar para macOS”. O arquivo LangSwitcher.dmg é salvo na pasta “{downloads}”."),
    ("Arraste para “{applications}”", "Abra o DMG e arraste o LangSwitcher para a pasta “{applications}”."),
-   ("Primeiro uso", "O macOS avisa que o programador não foi identificado, porque o app ainda não é notarizado. Abra “{settings}” → “{privacy}” e clique em “{open_anyway}”."),
-   ("Conceda a monitorização de entrada", "Escolha “{grant}” no menu do app, ou ative o LangSwitcher em “{settings}” → “{privacy}” → “{input_mon}”."),
-   ("Pronto", "O indicador de layout (EN/RU) aparece na barra de menus. Toque em Cmd+Shift para trocar e, se quiser, ative “{login}” no menu.")]),
+   ("Primeira abertura", "O macOS avisa que o desenvolvedor não foi identificado, porque o aplicativo ainda não foi notarizado. Abra “{settings}” → “{privacy}” e clique em “{open_anyway}”."),
+   ("Permita o monitoramento de entrada", "Escolha “{grant}” no menu do aplicativo ou ative o LangSwitcher em “{settings}” → “{privacy}” → “{input_mon}”."),
+   ("Pronto", "O indicador de layout (EN/RU) aparece na barra de menus. Toque em Cmd+Shift para trocar e, se quiser, ative “{login}” no menu do aplicativo.")]),
 }
 
 # ---- Social preview (og.py) -------------------------------------------------

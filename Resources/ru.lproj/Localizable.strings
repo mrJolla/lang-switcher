@@ -1,0 +1,8 @@
+"menu.enabled" = "Включено";
+"menu.launchAtLogin" = "Запускать при входе в систему";
+"menu.layouts" = "Раскладки";
+"menu.layoutUnavailable" = "%@ (недоступна)";
+"menu.permissionGranted" = "Разрешение выдано";
+"menu.permissionNeeded" = "Нужно разрешение «Мониторинг ввода»";
+"menu.grantPermission" = "Выдать разрешение…";
+"menu.quit" = "Выход";

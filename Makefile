@@ -1,6 +1,7 @@
 APP      = build/LangSwitcher.app
 BIN      = $(APP)/Contents/MacOS/LangSwitcher
 SOURCES  = $(wildcard Sources/LangSwitcher/*.swift)
+STRINGS  = $(wildcard Resources/*.lproj/Localizable.strings)
 DEST     = $(HOME)/Applications/LangSwitcher.app
 DESTDIR_APPS = $(HOME)/Applications
 ICNS     = Resources/AppIcon.icns
@@ -9,20 +10,21 @@ VERSION  = $(shell /usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString"
 DMG      = dist/LangSwitcher-$(VERSION).dmg
 SWIFTFLAGS = -O -swift-version 5
 
-.PHONY: build release dmg install uninstall clean test
+.PHONY: build release dmg install uninstall clean test check-strings
 
 # Быстрая dev-сборка (только arm64).
-build: $(SOURCES) Info.plist
+build: $(SOURCES) $(STRINGS) Info.plist
 	rm -rf $(APP)
 	mkdir -p $(APP)/Contents/MacOS $(APP)/Contents/Resources
 	swiftc $(SWIFTFLAGS) -target arm64-apple-macos13.0 $(SOURCES) -o $(BIN)
 	cp Info.plist $(APP)/Contents/Info.plist
 	@if [ -f $(ICNS) ]; then cp $(ICNS) $(APP)/Contents/Resources/AppIcon.icns; fi
+	cp -R Resources/*.lproj $(APP)/Contents/Resources/
 	codesign --force --deep --sign - $(APP)
 	@echo "Собрано: $(APP)"
 
 # Универсальная сборка (arm64 + x86_64), ad-hoc подпись.
-release: $(SOURCES) Info.plist
+release: $(SOURCES) $(STRINGS) Info.plist
 	rm -rf $(APP) build/LangSwitcher-arm64 build/LangSwitcher-x86_64
 	mkdir -p $(APP)/Contents/MacOS $(APP)/Contents/Resources
 	swiftc $(SWIFTFLAGS) -target arm64-apple-macos13.0 $(SOURCES) -o build/LangSwitcher-arm64
@@ -31,6 +33,7 @@ release: $(SOURCES) Info.plist
 	rm -f build/LangSwitcher-arm64 build/LangSwitcher-x86_64
 	cp Info.plist $(APP)/Contents/Info.plist
 	@if [ -f $(ICNS) ]; then cp $(ICNS) $(APP)/Contents/Resources/AppIcon.icns; fi
+	cp -R Resources/*.lproj $(APP)/Contents/Resources/
 	codesign --force --sign - --timestamp=none $(APP)
 	lipo -info $(BIN)
 	codesign --verify --deep --strict --verbose=2 $(APP)
@@ -47,7 +50,10 @@ dmg: release
 	rm -rf build/dmg
 	@echo "Собрано: $(DMG) (+ dist/LangSwitcher.dmg)"
 
-test: build
+check-strings:
+	python3 scripts/check_strings.py
+
+test: check-strings build
 	$(BIN) --self-test
 
 install: build

@@ -1,0 +1,8 @@
+"menu.enabled" = "Attivo";
+"menu.launchAtLogin" = "Apri al login";
+"menu.layouts" = "Layout";
+"menu.layoutUnavailable" = "%@ (non disponibile)";
+"menu.permissionGranted" = "Autorizzazione concessa";
+"menu.permissionNeeded" = "Serve l’autorizzazione «Monitoraggio input»";
+"menu.grantPermission" = "Concedi autorizzazione…";
+"menu.quit" = "Esci";
