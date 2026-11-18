@@ -58,7 +58,7 @@ def mock(n, u):
         return (f'<div class="mock m4" role="img" aria-label="{e(u["input_mon"], True)}">'
                 f'<div class="titlebar">{LIGHTS}</div><div class="pane">{sidebar(u["privacy"])}'
                 f'<div class="main"><h4>{e(u["input_mon"])}</h4><div class="card list">'
-                f'<div class="row"><span class="ph"></span><b class="bar"></b><span class="tg"><i></i></span></div>'
+                f'<div class="row"><span class="ph"></span><b class="skbar"></b><span class="tg"><i></i></span></div>'
                 f'<div class="row"><img src="{ic}" width="26" height="26" alt=""><span>LangSwitcher</span><span class="tg on hl"><i></i></span></div>'
                 f'</div></div></div></div>')
     return (f'<div class="mock m5" role="img" aria-label="EN">'

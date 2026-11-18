@@ -81,7 +81,7 @@ h1 { margin: 0 0 16px; font-size: clamp(32px, 6vw, 56px); line-height: 1.08; let
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
 /* Install steps */
-.install { width: 100%; max-width: 1000px; margin: 0 auto; padding: 24px 20px 40px; }
+.install { width: 100%; max-width: 1000px; margin: 0 auto; padding: 96px 20px 40px; }
 .install h2 { margin: 0 0 48px; text-align: center; font-size: clamp(28px, 4.5vw, 40px); letter-spacing: -.025em; line-height: 1.15; }
 .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 56px; }
 .step { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
@@ -132,7 +132,7 @@ h1 { margin: 0 0 16px; font-size: clamp(32px, 6vw, 56px); line-height: 1.08; let
 .row { display: flex; align-items: center; gap: 10px; padding: 9px 0; }
 .row + .row { border-top: 1px solid var(--m-line); } .row > span:nth-child(2) { flex: 1; font-weight: 500; }
 .ph { width: 26px; height: 26px; border-radius: 6px; background: var(--m-sk); } .row img { border-radius: 22.5%; }
-.bar { flex: 1; height: 8px; border-radius: 4px; background: var(--m-sk); opacity: .7; max-width: 60%; }
+.skbar { flex: 1; height: 8px; border-radius: 4px; background: var(--m-sk); opacity: .7; max-width: 60%; }
 .tg { width: 38px; height: 22px; border-radius: 11px; background: var(--m-sk); position: relative; flex: none; margin-left: auto; }
 .tg i { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.3); }
 .tg.on { background: #30d158; } .tg.on i { left: 18px; }
@@ -149,8 +149,8 @@ h1 { margin: 0 0 16px; font-size: clamp(32px, 6vw, 56px); line-height: 1.08; let
 .dd li.sep { height: 1px; padding: 0; margin: 5px 4px; background: var(--m-line); border-radius: 0; }
 .dd .ck { width: 18px; flex: none; } .dd .more { margin-left: auto; color: var(--m-sub); }
 
-@media (max-width: 760px) {
-  .install { padding-top: 16px; }
+@media (max-width: 900px) {
+  .install { padding-top: 48px; }
   .steps { gap: 44px; }
   .step { grid-template-columns: 1fr; gap: 22px; }
   .step:nth-child(even) .txt { order: 0; }
@@ -158,4 +158,11 @@ h1 { margin: 0 0 16px; font-size: clamp(32px, 6vw, 56px); line-height: 1.08; let
   .main { padding: 12px 10px 14px; } .card { padding: 10px; } .list { padding: 2px 10px; } .row { gap: 8px; } .tg { flex: none; }
   .m3 .pane, .m4 .pane { grid-template-columns: minmax(0, 38%) minmax(0, 1fr); }
   .num { width: 44px; height: 44px; font-size: 22px; }
+}
+@media (max-width: 420px) {
+  .pane { grid-template-columns: 1fr !important; min-height: 0; }
+  .side { display: none; }
+  .row > span:nth-child(2) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .m2 .dmgbody { gap: 14px; padding: 24px 10px 20px; }
+  .dd { margin-right: 10px; }
 }
