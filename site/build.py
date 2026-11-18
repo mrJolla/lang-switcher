@@ -76,7 +76,7 @@ def steps(lang):
         else:
             ti = e(ti)
         items.append(f'<li class="step"><div class="txt"><span class="num" aria-hidden="true">{i}</span><div><h3>{ti}</h3><p>{e(tx)}</p></div></div><div class="art">{mock(i, u)}</div></li>')
-    return f'<section class="install" aria-labelledby="install-h"><h2 id="install-h">{e(s["h"])}</h2><ol class="steps">' + "".join(items) + '</ol></section>'
+    return f'<section class="install container" aria-labelledby="install-h"><h2 id="install-h">{e(s["h"])}</h2><ol class="steps">' + "".join(items) + '</ol></section>'
 
 def page(lang):
     t = T[lang]
@@ -115,7 +115,7 @@ def page(lang):
 <body>
 {SPRITE}
 <header class="site-header">
-<div class="bar">
+<div class="bar container">
 <a class="brand" href="./" aria-label="{e(t["home"], True)}"><img src="../assets/icon-64.png" width="32" height="32" alt=""><span>LangSwitcher</span></a>
 <div class="actions">
 <a class="gh-link" href="{REPO}" aria-label="{e(t["gh_label"], True)}">{GH_MARK}<span class="gh-text">GitHub</span></a>
@@ -128,7 +128,7 @@ def page(lang):
 </div>
 </div>
 </header>
-<main class="hero">
+<main class="hero container">
 <div class="icon-wrap"><img class="app-icon" src="../assets/icon-512.png" srcset="../assets/icon-256.png 256w, ../assets/icon-512.png 512w" sizes="(max-width: 480px) 168px, 216px" width="216" height="216" alt="{e(t["icon_alt"], True)}"></div>
 <h1>{e(t["h1"])}</h1>
 <p class="sub">{e(t["sub"])}</p>
@@ -139,7 +139,7 @@ def page(lang):
 <p class="meta">{meta}</p>
 </main>
 {steps(lang)}
-<footer class="site-footer">© 2026 mrJolla · <a href="{REPO}">GitHub</a></footer>
+<footer class="site-footer container">© 2026 mrJolla · <a href="{REPO}">GitHub</a></footer>
 <script src="../assets/lang.js"></script>
 </body>
 </html>
@@ -188,7 +188,7 @@ def root():
 </script>
 </head>
 <body class="plain">
-<main class="hero">
+<main class="hero container">
 <img class="app-icon" src="assets/icon-256.png" width="128" height="128" alt="LangSwitcher">
 <h1>LangSwitcher</h1>
 <noscript><ul class="lang-list">
@@ -213,7 +213,7 @@ def notfound():
 <link rel="stylesheet" href="/lang-switcher/assets/style.css">
 </head>
 <body class="plain">
-<main class="hero">
+<main class="hero container">
 <img class="app-icon" src="/lang-switcher/assets/icon-256.png" width="128" height="128" alt="LangSwitcher">
 <h1>404</h1>
 <p class="sub"><a href="/lang-switcher/">LangSwitcher</a></p>
