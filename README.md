@@ -1,73 +1,107 @@
+<div align="center">
+
+[English](README.md) | [Русский](README.ru.md)
+
+<img src="Resources/icon/AppIcon-1024.png" alt="LangSwitcher icon" width="128" height="128">
+
 # LangSwitcher
 
-Маленькое нативное (universal: arm64 + x86_64) приложение для строки меню macOS — замена Punto Switcher для одной задачи: переключение раскладки по **Cmd+Shift**.
+**Switch the keyboard layout with a Cmd+Shift tap. Tiny, native, lives in your menu bar.**
 
-## Что делает
+![macOS 13+](https://img.shields.io/badge/macOS-13%2B-black?logo=apple)
+![Apple Silicon & Intel](https://img.shields.io/badge/Apple%20Silicon%20%26%20Intel-universal-blue)
+[![Latest release](https://img.shields.io/github/v/release/mrJolla/lang-switcher)](https://github.com/mrJolla/lang-switcher/releases/latest)
 
-- Переключает раскладку, когда вы нажали и **отпустили** Cmd+Shift (в любом порядке, левые/правые клавиши) и между этим не нажималась никакая другая клавиша или кнопка мыши и не было Ctrl/Option. Cmd+Shift+Z, Cmd+Shift+4, Cmd+Shift+клик не переключают. Caps Lock игнорируется.
-- Цикл: все включённые клавиатурные источники ввода в системном порядке, которые реально выбираются (TISSelectInputSource). Источники, которые не выбираются (например Korean с кодом -50), автоматически исключаются. Меню «Раскладки» позволяет снять/поставить галочки для участия в цикле (сохраняется). Не клавиатурные методы (эмодзи, Press and Hold) в цикл не входят.
-- В строке меню показывает метку текущей раскладки (EN, RU, KO).
-- Меню: «Включено», «Запускать при входе в систему», «Раскладки», статус разрешения, «Выдать разрешение…», «Выход».
+[Website](https://mrjolla.github.io/lang-switcher/) ·
+[Download](https://github.com/mrJolla/lang-switcher/releases/latest/download/LangSwitcher.dmg) ·
+[Releases](https://github.com/mrJolla/lang-switcher/releases)
 
-Проверить список источников: `build/LangSwitcher.app/Contents/MacOS/LangSwitcher --list-sources`.
-Самотест автомата жестов: `make test`.
+</div>
 
-## Установка (для пользователей)
+LangSwitcher is a small native menu-bar app for macOS that does one thing: it switches the input source when you tap **Cmd+Shift**, like Punto Switcher does. No Xcode project, no dependencies, universal binary (arm64 + x86_64).
 
-Требуется macOS 13 или новее.
+> The menu is in Russian for now; localization is not done yet. The [website](https://mrjolla.github.io/lang-switcher/) is available in 7 languages.
 
-1. Скачайте `LangSwitcher-<версия>.dmg` со страницы релизов: https://github.com/mrJolla/lang-switcher/releases
-2. Откройте DMG и перетащите LangSwitcher.app в папку «Программы» (Applications).
-3. **Первый запуск.** Приложение пока **не нотаризовано** (нет платной подписи Apple Developer ID), поэтому Gatekeeper заблокирует его при первом открытии. В macOS 15 и новее способ «правый клик → Открыть» больше не работает. Сделайте так:
-   - попробуйте открыть LangSwitcher (появится предупреждение — закройте его);
-   - откройте Системные настройки → Конфиденциальность и безопасность, прокрутите вниз до сообщения о LangSwitcher и нажмите «Всё равно открыть» (Open Anyway), подтвердите паролем или Touch ID.
+## Features
 
-   Альтернатива через Терминал (снимает карантинный атрибут):
-   ```
+- **Cmd+Shift tap** switches the layout. Press and release both keys (either order, left or right keys). Nothing else may happen in between: other keys, mouse clicks, Ctrl or Option cancel the gesture. So Cmd+Shift+Z, Cmd+Shift+4 or Cmd+Shift+click do not switch. Caps Lock is ignored.
+- **Cycles through your enabled keyboard layouts** in system order. Only sources that can actually be selected take part.
+- **Choose which layouts participate** from the menu; the choice is remembered.
+- **Current layout label** (EN, RU, ...) in the menu bar.
+- **Launch at login** (via SMAppService).
+- Native Swift, no third-party code, universal (Apple Silicon and Intel), macOS 13 or newer.
+
+## Installation
+
+1. **Download** [LangSwitcher.dmg](https://github.com/mrJolla/lang-switcher/releases/latest/download/LangSwitcher.dmg).
+2. **Drag** LangSwitcher.app to the Applications folder.
+3. **Open Anyway.** The app is not notarized, so Gatekeeper blocks the first launch. Try to open it once, close the warning, then go to System Settings > Privacy & Security, scroll down and click **Open Anyway** next to LangSwitcher. On macOS 15 and later right-click > Open no longer works. Terminal alternative:
+   ```sh
    xattr -dr com.apple.quarantine /Applications/LangSwitcher.app
    ```
-4. Выдайте разрешение «Мониторинг ввода» (см. ниже).
-5. По желанию включите в меню пункт «Запускать при входе в систему».
+4. **Input Monitoring.** Open the menu bar item > "Выдать разрешение…" (Grant permission), or System Settings > Privacy & Security > Input Monitoring, and enable LangSwitcher. No restart needed: the app checks every 2 seconds.
+5. **Done.** Tap Cmd+Shift.
 
-## Сборка (для разработчиков)
+## Usage
 
-Нужны только Command Line Tools (Xcode не нужен). Версия задаётся в одном месте — `CFBundleShortVersionString` в Info.plist.
+Tap **Cmd+Shift** anywhere. The menu bar item shows the current layout; click it for the menu (labels are in Russian):
 
+| Menu item | Meaning |
+| --- | --- |
+| Включено | Enable or disable switching |
+| Запускать при входе в систему | Launch at login |
+| Раскладки | Submenu: choose which layouts take part in the cycle |
+| Разрешение выдано / Выдать разрешение… | Input Monitoring status and a shortcut to the settings |
+| Выход | Quit |
+
+To list detected input sources: `/Applications/LangSwitcher.app/Contents/MacOS/LangSwitcher --list-sources`.
+
+## FAQ and troubleshooting
+
+**Switching stopped working after an update or rebuild.**
+The app is ad-hoc signed, so every new build looks like a different app to macOS and the Input Monitoring permission is dropped. Reset it and grant it again:
+```sh
+tccutil reset ListenEvent io.github.mrjolla.langswitcher
 ```
-make build      # build/LangSwitcher.app (только arm64, быстрая dev-сборка, ad-hoc подпись)
-make release    # universal (arm64 + x86_64) через lipo, ad-hoc подпись, проверка lipo/codesign
-make dmg        # release + dist/LangSwitcher-<версия>.dmg (UDZO, со ссылкой на /Applications)
-make test       # самотест автомата жестов
-make install    # завершить запущенный экземпляр, скопировать в ~/Applications, запустить
-make uninstall  # завершить и удалить из ~/Applications
+Then relaunch the app (or remove the old LangSwitcher entry in Input Monitoring with "-" and add it again).
+
+**Why is it not notarized?**
+Notarization requires a paid Apple Developer ID. The app is open source and you can build it yourself (see below); until then use Open Anyway.
+
+**A Korean/CJK input mode is skipped or shown as unavailable.**
+macOS does not allow some input modes (for example Korean, error -50) to be selected programmatically. LangSwitcher detects these and leaves them out of the cycle. For CJK sources that do work, macOS sometimes ignores the first selection, so the app verifies the result and retries after 0.08 s and 0.25 s.
+
+**How do I uninstall?**
+Move LangSwitcher.app to the Trash, remove it from Input Monitoring and Login Items, and optionally run `defaults delete io.github.mrjolla.langswitcher`.
+
+## Build from source
+
+Only the Command Line Tools are needed (no Xcode). The version lives in `Info.plist`.
+
+```sh
+make build      # arm64 dev build -> build/LangSwitcher.app
+make release    # universal (arm64 + x86_64), ad-hoc signed
+make dmg        # release + dist/LangSwitcher-<version>.dmg and dist/LangSwitcher.dmg
+make test       # self-test of the gesture state machine
+make install    # copy to ~/Applications and launch
+make uninstall
 make clean
 ```
 
-Иконка берётся из `Resources/AppIcon.icns` (если файл есть).
+## Website
 
-**Важно:** каждая пересборка с ad-hoc подписью меняет подпись кода, из-за чего macOS считает приложение новым и сбрасывает разрешение «Мониторинг ввода». После пересборки выполните `tccutil reset ListenEvent io.github.mrjolla.langswitcher` и выдайте разрешение заново.
+The landing page in `docs/` is served by GitHub Pages (branch `main`, folder `/docs`). It is generated from `site/translations.py` and `site/build.py` for 7 languages. After editing, run:
 
-## Разрешение «Мониторинг ввода»
+```sh
+python3 site/build.py
+```
 
-При первом запуске откройте меню → «Выдать разрешение…» (или Системные настройки → Конфиденциальность и безопасность → Мониторинг ввода) и включите LangSwitcher. Перезапускать приложение не нужно: оно проверяет разрешение раз в 2 секунды и включает перехват, как только оно выдано.
+and commit the result. The Download button points to `releases/latest/download/LangSwitcher.dmg`, so attach `dist/LangSwitcher.dmg` to every release.
 
-Приложение подписано ad-hoc, поэтому после **каждой пересборки** macOS может считать его новым и сбросить разрешение. Если после пересборки переключение не работает, а в логе tccd (`log stream --predicate 'process == "tccd"' | grep -i langswitch`) есть «Failed to match existing code requirement», выполните `tccutil reset ListenEvent io.github.mrjolla.langswitcher` и перезапустите приложение — оно само запросит разрешение, останется включить переключатель. Либо удалите старую запись LangSwitcher из списка «Мониторинг ввода» (кнопка «−») и добавьте заново.
+## Privacy
 
-## Автозапуск
+LangSwitcher listens to keyboard modifier and key/mouse-click events locally through a listen-only event tap, only to detect the Cmd+Shift gesture. It does not record or store what you type, and it has no network code at all.
 
-Пункт меню «Запускать при входе в систему» (SMAppService). Лучше включать после установки в ~/Applications. Состояние берётся из системы; также его видно в Системные настройки → Основные → Объекты входа.
+## Credits
 
-## Удаление
-
-Перетащите LangSwitcher.app из «Программ» в Корзину (или `make uninstall` для установки из исходников), затем удалите запись из «Мониторинг ввода» и (если был включён автозапуск) из «Объекты входа». Настройки: `defaults delete io.github.mrjolla.langswitcher`.
-
-## Примечания
-
-- Системный `TISCreateInputSourceList(…, includeAllInstalled: false)` не возвращает включённые режимы CJK (Korean), поэтому список строится из полного перечня с фильтром по IsEnabled и порядком из настроек `com.apple.HIToolbox`.
-- Из-за известной особенности macOS выбор CJK-метода иногда не применяется; после переключения приложение проверяет результат и повторяет выбор через 0.08 и 0.25 с.
-
-## Сайт
-
-Лендинг: https://mrjolla.github.io/lang-switcher/ (GitHub Pages, ветка `main`, папка `/docs`). Ссылка «Download» ведёт на `releases/latest/download/LangSwitcher.dmg`, поэтому в релиз нужно прикладывать `dist/LangSwitcher.dmg` (его создаёт `make dmg` рядом с версионным файлом).
-
-Страницы на 7 языках генерируются из одного шаблона и переводов: правьте `site/translations.py` / `site/build.py`, затем `python3 site/build.py` (пересобирает `docs/<язык>/index.html`, `docs/index.html`, `docs/404.html`) и коммитьте результат.
+Made by [mrJolla](https://github.com/mrJolla). Inspired by Punto Switcher.
