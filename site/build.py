@@ -3,7 +3,7 @@
 Usage: python3 site/build.py   (no dependencies)"""
 import pathlib
 from html import escape as e
-from translations import T, ORDER, VERSION
+from translations import T, S, ORDER, VERSION
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
@@ -26,6 +26,57 @@ def flag(code):
     return f'<svg class="flag" viewBox="0 0 30 20" width="22" height="15" aria-hidden="true" focusable="false"><use href="#f-{FLAG[code]}"/></svg>'
 
 GH_MARK = '<svg class="gh-mark" viewBox="0 0 16 16" width="20" height="20" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>'
+
+
+DMG_ICON = '<svg class="dmgicon" viewBox="0 0 40 48" width="34" height="41" aria-hidden="true"><defs><linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f5f7"/><stop offset="1" stop-color="#c9ccd2"/></linearGradient></defs><path d="M6 1h20l10 10v33a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V4a3 3 0 0 1 3-3z" fill="url(#dg)" stroke="#9a9ea6" stroke-width="1"/><path d="M26 1v8a2 2 0 0 0 2 2h8" fill="#dfe1e5" stroke="#9a9ea6" stroke-width="1"/><rect x="9" y="26" width="22" height="11" rx="3" fill="#8e939c"/><circle cx="27" cy="31.5" r="1.7" fill="#e8eaee"/></svg>'
+FOLDER = '<svg viewBox="0 0 64 52" width="76" height="62" aria-hidden="true"><defs><linearGradient id="fg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6cc4fb"/><stop offset="1" stop-color="#2d8ef0"/></linearGradient></defs><path d="M4 8a4 4 0 0 1 4-4h14l6 6h28a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#4aa7f5"/><rect x="2" y="14" width="60" height="34" rx="4" fill="url(#fg)"/></svg>'
+ARROW = '<svg class="arrow" viewBox="0 0 48 24" width="48" height="24" aria-hidden="true"><path d="M2 12h40M33 3l9 9-9 9" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+LIGHTS = '<span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>'
+
+def sidebar(sel):
+    rows = "".join(f'<span class="sk"><i></i><b></b></span>' for _ in range(3))
+    return f'<div class="side">{rows}<span class="sk sel"><i></i><span>{e(sel)}</span></span>{rows}</div>'
+
+def mock(n, u):
+    ic = "../assets/icon-64.png"
+    if n == 1:
+        return (f'<div class="mock m1" role="img" aria-label="LangSwitcher.dmg">'
+                f'<div class="pop"><div class="pop-h">{e(u["downloads"])}</div>'
+                f'<div class="dl">{DMG_ICON}<div><b>LangSwitcher.dmg</b><small>v{VERSION}</small></div>'
+                f'<svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6 10l3 3 5-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>')
+    if n == 2:
+        return (f'<div class="mock m2" role="img" aria-label="LangSwitcher → {e(u["applications"], True)}">'
+                f'<div class="titlebar">{LIGHTS}<span class="ttl">LangSwitcher</span></div>'
+                f'<div class="dmgbody"><figure><img src="../assets/icon-256.png" width="84" height="84" alt=""><figcaption>LangSwitcher</figcaption></figure>{ARROW}'
+                f'<figure>{FOLDER}<figcaption>{e(u["applications"])}</figcaption></figure></div></div>')
+    if n == 3:
+        return (f'<div class="mock m3" role="img" aria-label="{e(u["settings"], True)} › {e(u["privacy"], True)}">'
+                f'<div class="titlebar">{LIGHTS}</div><div class="pane">{sidebar(u["privacy"])}'
+                f'<div class="main"><h4>{e(u["privacy"])}</h4><div class="card"><p>{e(u["blocked"])}</p>'
+                f'<span class="pill hl">{e(u["open_anyway"])}</span></div></div></div></div>')
+    if n == 4:
+        return (f'<div class="mock m4" role="img" aria-label="{e(u["input_mon"], True)}">'
+                f'<div class="titlebar">{LIGHTS}</div><div class="pane">{sidebar(u["privacy"])}'
+                f'<div class="main"><h4>{e(u["input_mon"])}</h4><div class="card list">'
+                f'<div class="row"><span class="ph"></span><b class="bar"></b><span class="tg"><i></i></span></div>'
+                f'<div class="row"><img src="{ic}" width="26" height="26" alt=""><span>LangSwitcher</span><span class="tg on hl"><i></i></span></div>'
+                f'</div></div></div></div>')
+    return (f'<div class="mock m5" role="img" aria-label="EN">'
+            f'<div class="menubar"><span class="sk"><i></i></span><span class="sk"><i></i></span><span class="ind">EN</span><span class="clk"></span></div>'
+            f'<ul class="dd"><li><span class="ck">✓</span>{e(u["enabled"])}</li><li><span class="ck"></span>{e(u["layouts"])}<span class="more">›</span></li>'
+            f'<li class="sep"></li><li><span class="ck"></span>{e(u["login"])}</li><li class="sep"></li><li><span class="ck"></span>{e(u["quit"])}</li></ul></div>')
+
+def steps(lang):
+    s = S[lang]; u = s["ui"]
+    items = []
+    for i, (ti, tx) in enumerate(s["steps"], 1):
+        ti, tx = ti.format(**u), tx.format(**u)
+        if i == 1:
+            ti = f'<a href="{DMG}">{e(ti)}</a>'
+        else:
+            ti = e(ti)
+        items.append(f'<li class="step"><div class="txt"><span class="num" aria-hidden="true">{i}</span><div><h3>{ti}</h3><p>{e(tx)}</p></div></div><div class="art">{mock(i, u)}</div></li>')
+    return f'<section class="install" aria-labelledby="install-h"><h2 id="install-h">{e(s["h"])}</h2><ol class="steps">' + "".join(items) + '</ol></section>'
 
 def page(lang):
     t = T[lang]
@@ -86,8 +137,8 @@ def page(lang):
 <a class="btn secondary" href="{REPO}">{e(t["github"])}</a>
 </div>
 <p class="meta">{meta}</p>
-<p class="note">{e(t["note"])}</p>
 </main>
+{steps(lang)}
 <footer class="site-footer">© 2026 mrJolla · <a href="{REPO}">GitHub</a></footer>
 <script src="../assets/lang.js"></script>
 </body>
