@@ -77,6 +77,8 @@ h1 { margin: 0 0 16px; font-size: clamp(32px, 6vw, 56px); line-height: 1.08; let
   .brand { font-size: 17px; gap: 8px; }
   .gh-text { display: none; }
   .gh-link { padding: 0 9px; }
+  .actions { gap: 4px; }
+  .lang summary { padding: 0 9px; gap: 6px; }
   .hero { padding-top: var(--s5); }
   .app-icon { width: 168px; height: 168px; }
   .icon-wrap::before { inset: -60px; }
