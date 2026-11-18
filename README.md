@@ -99,6 +99,8 @@ python3 site/build.py
 
 and commit the result. The Download button points to `releases/latest/download/LangSwitcher.dmg`, so attach `dist/LangSwitcher.dmg` to every release.
 
+OG preview images: `python3 site/og.py` renders them and compresses losslessly (oxipng, zopflipng, optipng or an ImageMagick fallback; pixels are verified identical). `python3 site/og.py --optimize-only docs/assets/*.png` only re-compresses existing PNGs without re-rendering.
+
 ## Privacy
 
 LangSwitcher listens to keyboard modifier and key/mouse-click events locally through a listen-only event tap, only to detect the Cmd+Shift gesture. It does not record or store what you type, and it has no network code at all.
