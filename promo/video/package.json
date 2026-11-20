@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "studio": "remotion studio src/index.ts",
-    "render": "remotion render src/index.ts Promo out/langswitcher-promo.mp4",
+    "render": "npm run render:ru && npm run render:en",
+    "render:ru": "remotion render src/index.ts Promo out/langswitcher-promo.mp4",
+    "render:en": "remotion render src/index.ts PromoEn out/langswitcher-promo.en.mp4",
     "audio": "uv run --with numpy python scripts/make_audio.py"
   },
   "dependencies": {

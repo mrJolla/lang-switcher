@@ -27,6 +27,15 @@ const T = {
 const EN_TEXT = 'Hello, ';
 const RU_TEXT = 'привет!';
 
+export type Lang = 'ru' | 'en';
+export type PromoProps = {lang: Lang};
+
+/** Poster copy per video language (the typing demo is the same: it shows an EN -> RU switch). */
+const COPY: Record<Lang, {title: [string, string, string]; meta: string}> = {
+  ru: {title: ['Удобная', 'смена языка', 'на клавиатуре'], meta: 'macOS 13+ · Apple Silicon и Intel'},
+  en: {title: ['Switch your', 'keyboard layout', 'with one tap'], meta: 'macOS 13+ · Apple Silicon & Intel'},
+};
+
 const useSpring = (from: number, damping = 14, durationInFrames?: number) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
@@ -130,7 +139,7 @@ const Demo: React.FC = () => {
 };
 
 /** Scene 2: the poster assembles itself. */
-const Poster: React.FC = () => {
+const Poster: React.FC<PromoProps> = ({lang}) => {
   const frame = useCurrentFrame();
   const icon = useSpring(T.iconIn, 10);
   const name = useSpring(T.nameIn, 18);
@@ -139,11 +148,8 @@ const Poster: React.FC = () => {
   const keys = useSpring(T.posterKeysIn, 13);
   const depth = pressDepth(frame, T.posterPress);
   const glow = 0.42 + Math.sin(frame / 12) * 0.08;
-  const title = [
-    {text: 'Удобная', color: INK},
-    {text: 'смена языка', color: INK},
-    {text: 'на клавиатуре', color: 'gradient'},
-  ];
+  const copy = COPY[lang];
+  const title = copy.title.map((text, i) => ({text, color: i === 2 ? 'gradient' : INK}));
 
   return (
     <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', textAlign: 'center', fontFamily: FONT, color: INK, paddingBottom: 40}}>
@@ -168,7 +174,7 @@ const Poster: React.FC = () => {
         ))}
       </div>
       <div style={{marginTop: 34, fontSize: 40, fontWeight: 500, color: MUTED, opacity: meta, transform: `translateY(${(1 - meta) * 24}px)`}}>
-        macOS 13+ · Apple Silicon и Intel
+        {copy.meta}
       </div>
       <div style={{marginTop: 100, opacity: keys, transform: `translateY(${(1 - keys) * 120}px)`}}>
         <Keys depth={depth} />
@@ -177,7 +183,7 @@ const Poster: React.FC = () => {
   );
 };
 
-export const Promo: React.FC = () => {
+export const Promo: React.FC<PromoProps> = ({lang}) => {
   const frame = useCurrentFrame();
   const out = interpolate(frame, T.sceneSwap, [1, 0], clamp);
   const fadeIn = interpolate(frame, [0, 8], [0, 1], clamp);
@@ -189,7 +195,7 @@ export const Promo: React.FC = () => {
           <Demo />
         </AbsoluteFill>
       )}
-      {frame >= T.iconIn - 2 && <Poster />}
+      {frame >= T.iconIn - 2 && <Poster lang={lang} />}
       <Soundtrack />
     </AbsoluteFill>
   );
