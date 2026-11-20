@@ -35,6 +35,14 @@ METRIKA = f"""<!-- Yandex.Metrika counter -->
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/{METRIKA_ID}" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->"""
+# Google tag (GTM container), emitted next to Metrika on the language pages only, for the same reason.
+GTM_ID = "GTM-T2TNQXFZ"
+GTAG = f"""<script async src="https://www.googletagmanager.com/gtm.js?id={GTM_ID}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+</script>"""
 def bcp(l): return T[l].get("bcp", l)   # hreflang / html lang / JSON-LD (pt -> pt-BR); URL path stays /pt/
 
 # The app's own menu labels come from the .strings files, so the site mockups can't drift from the app.
@@ -183,6 +191,7 @@ def page(lang):
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="stylesheet" href="../assets/style.css">
+{GTAG}
 {METRIKA}
 </head>
 <body>
