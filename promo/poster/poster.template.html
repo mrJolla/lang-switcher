@@ -1,0 +1,36 @@
+<!doctype html><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden}
+body{font-family:-apple-system,"SF Pro Display","Helvetica Neue",Arial,sans-serif;color:#0b1f3a;-webkit-font-smoothing:antialiased;
+ background:radial-gradient(1100px 1000px at 50% 40%,#dcecff 0,#eef6ff 45%,#fbfdff 82%);position:relative;text-align:center}
+.blob{position:absolute;border-radius:50%;filter:blur(70px)}
+.b1{width:760px;height:760px;left:-300px;top:1250px;background:rgba(120,190,255,.35)}
+.b2{width:640px;height:640px;right:-260px;top:-140px;background:rgba(80,150,255,.24)}
+.wrap{position:relative;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 80px 40px}
+.icon{width:360px;height:360px;position:relative}
+.icon:before{content:"";position:absolute;inset:-140px;background:radial-gradient(closest-side,rgba(10,132,255,.42),rgba(10,132,255,0))}
+.icon img{position:relative;width:100%;height:100%;filter:drop-shadow(0 30px 40px rgba(20,60,120,.32))}
+.name{margin-top:56px;font-size:56px;font-weight:600;color:#0a62d6;letter-spacing:.2px}
+h1{margin-top:26px;font-size:104px;line-height:1.04;font-weight:800;letter-spacing:-3px;max-width:920px}
+h1 span{background:linear-gradient(90deg,#0a62d6,#3aa0ff);-webkit-background-clip:text;color:transparent}
+.meta{margin-top:34px;font-size:40px;font-weight:500;color:#4a6285}
+.keys{margin-top:100px;display:flex;align-items:center;gap:40px}
+.key{width:260px;height:220px;border-radius:44px;background:linear-gradient(#ffffff,#eef3fa);
+ box-shadow:0 2px 0 #fff inset,0 -10px 0 rgba(30,70,140,.10) inset,0 26px 46px -14px rgba(20,70,160,.40),0 0 0 1.5px rgba(30,70,140,.12);
+ display:flex;flex-direction:column;justify-content:space-between;padding:30px 34px;text-align:left}
+.key .g{font-size:76px;line-height:1;align-self:flex-end}
+.key .l{font-size:38px;font-weight:600;color:#4a6285}
+.plus{font-size:96px;font-weight:300;color:#7d94b5}
+</style>
+<div class="blob b1"></div><div class="blob b2"></div>
+<div class="wrap">
+ <div class="icon"><img src="data:image/png;base64,@ICON@"></div>
+ <div class="name">LangSwitcher</div>
+ <h1>Удобная<br>смена языка<br><span>на клавиатуре</span></h1>
+ <div class="meta">macOS 13+ · Apple Silicon и Intel</div>
+ <div class="keys">
+  <div class="key"><span class="g">⌘</span><span class="l">command</span></div>
+  <div class="plus">+</div>
+  <div class="key"><span class="g">⇧</span><span class="l">shift</span></div>
+ </div>
+</div>
