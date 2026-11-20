@@ -19,6 +19,22 @@ VERIFICATION = {
 def verification_tags():
     return (f'<meta name="google-site-verification" content="{VERIFICATION["google"]}" />\n'
             f'<meta name="yandex-verification" content="{VERIFICATION["yandex"]}" />')
+# Yandex.Metrika counter, emitted in <head> of the language pages only (the root page just redirects to one
+# of them, so counting it too would double every visit and register the redirect as a bounce).
+METRIKA_ID = 114387372
+METRIKA = f"""<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){{
+        m[i]=m[i]||function(){{(m[i].a=m[i].a||[]).push(arguments)}};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {{if (document.scripts[j].src === r) {{ return; }}}}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    }})(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id={METRIKA_ID}', 'ym');
+
+    ym({METRIKA_ID}, 'init', {{ssr:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true}});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/{METRIKA_ID}" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->"""
 def bcp(l): return T[l].get("bcp", l)   # hreflang / html lang / JSON-LD (pt -> pt-BR); URL path stays /pt/
 
 # The app's own menu labels come from the .strings files, so the site mockups can't drift from the app.
@@ -167,6 +183,7 @@ def page(lang):
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="stylesheet" href="../assets/style.css">
+{METRIKA}
 </head>
 <body>
 {SPRITE}
